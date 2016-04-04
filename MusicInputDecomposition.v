@@ -1,4 +1,4 @@
-`include "defines.v"
+`include "Defines.v"
 
 module MusicInputDecomposition(
   input [799:0] InputSong,
