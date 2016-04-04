@@ -1,17 +1,19 @@
+`include "Defines.v"
+
 module ProjectAmadeus();
 
 // Hard-Coded input
-reg [2399:0] inputSongA;
-reg [2399:0] inputSongB;
+reg [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)-1:0] inputSongA;
+reg [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)-1:0] inputSongB;
 
 // Data for Markov Chains
-reg [271:0] MarkovChains [0:155];
+reg [SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN-1:0] MarkovChains [0:MARKOV_CHAIN_LEN*4-1];
 
 // I/O for modules
-wire [1199:0] fragAA;
-wire [1199:0] fragAB;
-wire [1199:0] fragBA;
-wire [1199:0] fragBB;
+wire [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)/2-1:0] fragAA;
+wire [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)/2-1:0] fragAB;
+wire [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)/2-1:0] fragBA;
+wire [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)/2-1:0] fragBB;
 
 // Decomposition
 MusicInputDecomposition decompA(

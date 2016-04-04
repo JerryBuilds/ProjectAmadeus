@@ -4,6 +4,11 @@ module MachineLearningMarkov(
   input clk, reset,
   input start,
   
+  input [1199:0] fragA,
+  input [1199:0] fragB,
+  
+  output 
+  
   output done
 );
 
