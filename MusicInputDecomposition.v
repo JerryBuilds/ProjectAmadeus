@@ -1,12 +1,12 @@
 `include "Defines.v"
 
 module MusicInputDecomposition(
-  input [799:0] InputSong,
-  output [399:0] FragmentA,
-  output [399:0] FragmentB
+  input [2399:0] InputSong,
+  output [1199:0] FragmentA,
+  output [1199:0] FragmentB
 );
 
-assign FragmentA = InputSong[799:400];
-assign FragmentB = InputSong[399:0];
+assign FragmentA = InputSong[2399:1200];
+assign FragmentB = InputSong[1199:0];
 
 endmodule
