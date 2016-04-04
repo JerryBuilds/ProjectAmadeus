@@ -27,66 +27,66 @@ assign done = isDone;
 
 always @(posedge clk, negedge reset)
   begin
-    if (!reset)
+    for ()
       begin
-        state <= INIT;
-      end
-    else
-      begin
-        case (state)
-          
-          INIT:
-            begin
-              // state transitions
-              state <= CheckForMatches;
+        if (!reset)
+          begin
+            state <= INIT;
+          end
+        else
+          begin
+            case (state)
               
-              // RTL
-              i <= 0;
-              isDone <= 0;
+              INIT:
+                begin
+                  // state transitions
+                  state <= CheckForMatches;
+                  
+                  // RTL
+                  isDone <= 0;
+                  
+                end
+                
+              CheckForMatches:
+                begin
+                  // state transitions
+                  
+                  
+                  // RTL
+                  
+                  
+                end
+                
+              IncrementCount:
+                begin
+                  // state transitions
+                  
+                  
+                  // RTL
+                  
+                end
+                
+              AddToList:
+                begin
+                  // state transitions
+                  
+                  
+                  // RTL
+                  
+                end
+                
+              FINISH:
+                begin
+                  // state transitions
+                  
+                  
+                  // RTL
+                  
+                  
+                end
               
-            end
-            
-          CheckForMatches:
-            begin
-              // state transitions
-              
-              
-              // RTL
-              
-              
-            end
-            
-          IncrementCount:
-            begin
-              // state transitions
-              
-              
-              // RTL
-              i <= i + 1;
-              
-            end
-            
-          AddToList:
-            begin
-              // state transitions
-              
-              
-              // RTL
-              i <= i + 1;
-              
-            end
-            
-          FINISH:
-            begin
-              // state transitions
-              
-              
-              // RTL
-              
-              
-            end
-          
-        endcase
+            endcase
+          end
       end
   end
 
