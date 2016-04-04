@@ -141,11 +141,31 @@ MachineLearningMarkov mlkBA(
 
 
 // 1st markov merge
+MarkovFirstMerge markovMerge1A(
+  clk, reset,
+  markovMerge1Astart,
+  markovAA, markovAB,
+  markovA,
+  markovMerge1Adone
+);
 
+MarkovFirstMerge markovMerge1B(
+  clk, reset,
+  markovMerge1Bstart,
+  markovBA, markovBB,
+  markovB,
+  markovMerge1Bdone
+);
 
 
 // 2nd markov merge
-
+MarkovSecondMerge markovMerge2(
+  clk, reset,
+  markovMerge2start,
+  markovA, markovB,
+  markov,
+  markovMerge2done
+);
 
 
 
