@@ -44,7 +44,19 @@ wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_
 wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_LEN)-1:0] markovBA;
 wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_LEN)-1:0] markovBB;
 
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*2*(MARKOV_CHAIN_LEN)-1:0] markovA;
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*2*(MARKOV_CHAIN_LEN)-1:0] markovB;
+
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*4*(MARKOV_CHAIN_LEN)-1:0] markov;
+
+
+
+//*************************************
 // packing
+//*************************************
+
+
+// markov chain generation
 PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
             MARKOV_CHAIN_LEN,
             MarkovChains[MARKOV_CHAIN_LEN-1:0],
@@ -65,6 +77,23 @@ PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
             MarkovChains[4*MARKOV_CHAIN_LEN-1:3*MARKOV_CHAIN_LEN],
             markovBB)
             
+// 1st markov merge
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            2*MARKOV_CHAIN_LEN,
+            MarkovChains[2*MARKOV_CHAIN_LEN-1:0],
+            markovA)
+            
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            2*MARKOV_CHAIN_LEN,
+            MarkovChains[4*MARKOV_CHAIN_LEN-1:2*MARKOV_CHAIN_LEN],
+            markovB)
+            
+// 2nd markov merge
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            4*MARKOV_CHAIN_LEN,
+            MarkovChains[4*MARKOV_CHAIN_LEN-1:0],
+            markov)
+
 
 //*************************************
 // Module Instantiation
@@ -95,7 +124,6 @@ MachineLearningMarkov mlkAB(
   markovLearnABdone
 );
 
-
 MachineLearningMarkov mlkBA(
   clk, reset,
   fragBA,
@@ -112,7 +140,11 @@ MachineLearningMarkov mlkBA(
 
 
 
-// Markov First Merge
+// 1st markov merge
+
+
+
+// 2nd markov merge
 
 
 
