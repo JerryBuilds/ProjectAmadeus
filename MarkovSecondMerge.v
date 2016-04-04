@@ -1,4 +1,4 @@
-`include "defines.v"
+`include "Defines.v"
 
 module MarkovSecondMerge (
   input clk, reset,
