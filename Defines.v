@@ -3,3 +3,8 @@
 `define UNPACK_ARRAY(PK_WIDTH,PK_LEN,PK_DEST,PK_SRC)  genvar unpk_idx; generate for (unpk_idx=0; unpk_idx<(PK_LEN); unpk_idx=unpk_idx+1) begin; assign PK_DEST[unpk_idx][((PK_WIDTH)-1):0] = PK_SRC[((PK_WIDTH)*unpk_idx+(PK_WIDTH-1)):((PK_WIDTH)*unpk_idx)]; end; endgenerate
 
 //Global Constants
+'define SONG_INPUT_LEN 100
+'define SONG_OUTPUT_LEN 200
+'define SEQUENCE_LEN 10
+'define SEQUENCE_WITH_NEXT 11 //SEQUENCE_LEN + 1
+'define MARKOV_CHAIN_LEN 89 //SONG_INPUT_LEN - SEQUENCE_WITH_NEXT
