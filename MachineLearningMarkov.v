@@ -1,3 +1,5 @@
+`include "defines.v"
+
 module MachineLearningMarkov(
   input clk, reset,
   

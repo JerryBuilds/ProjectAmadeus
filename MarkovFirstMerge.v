@@ -1,3 +1,5 @@
+`include "defines.v"
+
 module MarkovFirstMerge (
   input clk, reset,
   

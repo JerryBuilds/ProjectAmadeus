@@ -1,3 +1,5 @@
+`include "defines.v"
+
 module MusicInputDecomposition(
   input [799:0] InputSong,
   output [399:0] FragmentA,
