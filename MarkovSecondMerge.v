@@ -2,6 +2,7 @@
 
 module MarkovSecondMerge (
   input clk, reset,
+  input start,
   
   output done
 );

@@ -2,6 +2,7 @@
 
 module MarkovFirstMerge (
   input clk, reset,
+  input start,
   
   output done
 );

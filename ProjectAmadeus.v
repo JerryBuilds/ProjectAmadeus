@@ -13,6 +13,7 @@ wire [1199:0] fragAB;
 wire [1199:0] fragBA;
 wire [1199:0] fragBB;
 
+// Decomposition
 MusicInputDecomposition decompA(
   inputSongA, fragAA, fragAB
 );
@@ -20,6 +21,8 @@ MusicInputDecomposition decompA(
 MusicInputDecomposition decompB(
   inputSongB, fragBA, fragBB
 );
+
+
 
 
 
