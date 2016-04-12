@@ -9,12 +9,12 @@
 
 //Global Constants
 'define SONG_INPUT_LEN                      100
-'define SONG_OUTPUT_LEN                     200 //SONG_INPUT_LEN*2
+'define SONG_OUTPUT_LEN      SONG_INPUT_LEN*2
 'define SEQUENCE_LEN                        11
-'define MARKOV_CHAIN_LEN                    39  //SONG_INPUT_LEN/DEG_INPUT_DECOMPOSITION - SEQUENCE_LEN
-'define GLUE_LEN                            3   // must be less than SONG_INPUT_LEN/2
+'define MARKOV_CHAIN_LEN                    39 //SONG_INPUT_LEN/DEG_INPUT_DECOMPOSITION - SEQUENCE_LEN
+'define GLUE_LEN                            3 // must be less than SONG_INPUT_LEN/2
 
 //Bit lengths
-'define NOTE_BIT_LEN                        8   //up to 256 notes
-'define DELAY_BIT_LEN                       16  //up to 65,000 milli-seconds
-'define SEQ_CNT_BIT_LEN                     8   // ROUND_UP(LOG2(SONG_INPUT_LEN))
+'define NOTE_BIT_LEN                        8 //up to 256 notes
+'define DELAY_BIT_LEN                       16 //up to 65,000 milli-seconds
+'define SEQ_CNT_BIT_LEN                     8 // ROUND_UP(LOG2(SONG_INPUT_LEN))

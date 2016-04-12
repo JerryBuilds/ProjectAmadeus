@@ -2,7 +2,10 @@
 
 module MachineLearningMarkov(
   input clk, reset,
-  input start,
+  
+  input [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)-1:0] fragment,
+  
+  output [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_LEN)-1:0] markov,
   
   output done
 );

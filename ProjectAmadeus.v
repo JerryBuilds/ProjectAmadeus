@@ -1,17 +1,103 @@
-module ProjectAmadeus();
+`include "Defines.v"
+
+module ProjectAmadeus(
+  input clk, reset
+);
 
 // Hard-Coded input
-reg [2399:0] inputSongA;
-reg [2399:0] inputSongB;
+reg [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)-1:0] inputSongA;
+reg [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)-1:0] inputSongB;
 
 // Data for Markov Chains
-reg [271:0] MarkovChains [0:155];
+reg [SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN-1:0] MarkovChains [0:MARKOV_CHAIN_LEN*4-1];
 
+//*************************************
 // I/O for modules
-wire [1199:0] fragAA;
-wire [1199:0] fragAB;
-wire [1199:0] fragBA;
-wire [1199:0] fragBB;
+//*************************************
+
+// start
+wire markovMerge1Astart, markovMerge1Bstart;
+wire markovMerge2start;
+
+
+// done
+wire markovLearnAAdone, markovLearnABdone, markovLearnBAdone, markovLearnBBdone;
+wire markovMerge1Adone, markovMerge1Bdone;
+wire markovMerge2done;
+
+
+// wiring previous done's to next start's
+assign markovMerge1Astart = markovLearnAAdone && markovLearnABdone;
+assign markovMerge1Bstart = markovLearnBAdone && markovLearnBBdone;
+assign markovMerge2start = markovMerge1Adone && markovMerge1Bdone;
+
+
+
+wire [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)/2-1:0] fragAA;
+wire [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)/2-1:0] fragAB;
+wire [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)/2-1:0] fragBA;
+wire [SONG_INPUT_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)/2-1:0] fragBB;
+
+// packed declarations
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_LEN)-1:0] markovAA;
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_LEN)-1:0] markovAB;
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_LEN)-1:0] markovBA;
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_LEN)-1:0] markovBB;
+
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*2*(MARKOV_CHAIN_LEN)-1:0] markovA;
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*2*(MARKOV_CHAIN_LEN)-1:0] markovB;
+
+wire [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*4*(MARKOV_CHAIN_LEN)-1:0] markov;
+
+
+
+//*************************************
+// packing
+//*************************************
+
+
+// markov chain generation
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            MARKOV_CHAIN_LEN,
+            MarkovChains[MARKOV_CHAIN_LEN-1:0],
+            markovAA)
+
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            MARKOV_CHAIN_LEN,
+            MarkovChains[2*MARKOV_CHAIN_LEN-1:MARKOV_CHAIN_LEN],
+            markovAB)
+            
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            MARKOV_CHAIN_LEN,
+            MarkovChains[3*MARKOV_CHAIN_LEN-1:2*MARKOV_CHAIN_LEN],
+            markovBA)
+            
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            MARKOV_CHAIN_LEN,
+            MarkovChains[4*MARKOV_CHAIN_LEN-1:3*MARKOV_CHAIN_LEN],
+            markovBB)
+            
+// 1st markov merge
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            2*MARKOV_CHAIN_LEN,
+            MarkovChains[2*MARKOV_CHAIN_LEN-1:0],
+            markovA)
+            
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            2*MARKOV_CHAIN_LEN,
+            MarkovChains[4*MARKOV_CHAIN_LEN-1:2*MARKOV_CHAIN_LEN],
+            markovB)
+            
+// 2nd markov merge
+PACK_ARRAY(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN,
+            4*MARKOV_CHAIN_LEN,
+            MarkovChains[4*MARKOV_CHAIN_LEN-1:0],
+            markov)
+
+
+//*************************************
+// Module Instantiation
+//*************************************
 
 // Decomposition
 MusicInputDecomposition decompA(
@@ -22,6 +108,64 @@ MusicInputDecomposition decompB(
   inputSongB, fragBA, fragBB
 );
 
+
+// Machine Learning Markov
+MachineLearningMarkov mlkAA(
+  clk, reset,
+  fragAA,
+  markovAA,
+  markovLearnAAdone
+);
+
+MachineLearningMarkov mlkAB(
+  clk, reset,
+  fragAB,
+  markovAB,
+  markovLearnABdone
+);
+
+MachineLearningMarkov mlkBA(
+  clk, reset,
+  fragBA,
+  markovBA,
+  markovLearnBAdone
+);
+
+MachineLearningMarkov mlkBA(
+  clk, reset,
+  fragBB,
+  markovBB,
+  markovLearnBBdone
+);
+
+
+
+// 1st markov merge
+MarkovFirstMerge markovMerge1A(
+  clk, reset,
+  markovMerge1Astart,
+  markovAA, markovAB,
+  markovA,
+  markovMerge1Adone
+);
+
+MarkovFirstMerge markovMerge1B(
+  clk, reset,
+  markovMerge1Bstart,
+  markovBA, markovBB,
+  markovB,
+  markovMerge1Bdone
+);
+
+
+// 2nd markov merge
+MarkovSecondMerge markovMerge2(
+  clk, reset,
+  markovMerge2start,
+  markovA, markovB,
+  markov,
+  markovMerge2done
+);
 
 
 
