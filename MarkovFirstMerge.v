@@ -4,11 +4,6 @@ module MarkovFirstMerge (
   input clk, reset,
   input start,
   
-  input [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_LEN)-1:0] markovA,
-  input [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(MARKOV_CHAIN_LEN)-1:0] markovB,
-  
-  output [(SEQUENCE_LEN*(NOTE_BIT_LEN+DELAY_BIT_LEN)+SEQ_CNT_BIT_LEN)*(2*MARKOV_CHAIN_LEN)-1:0] markov,
-  
   output done
 );
 

@@ -4,17 +4,28 @@
 
 //Degrees of paralelism
 'define DEG_INPUT                           2
-'define DEG_INPUT_DECOMPOSITION             2
-'define DEG_FRAG_DECOMPOSITION              2
+'define DEG_INPUT_DECOMP                    2
+'define DEG_FRAG_DECOMP                     2
 
 //Global Constants
 'define SONG_INPUT_LEN                      100
 'define SONG_OUTPUT_LEN      SONG_INPUT_LEN*2
-'define SEQUENCE_LEN                        11
+'define SONG_DIM                            2
+'define SEQ_LEN                             11
 'define MARKOV_CHAIN_LEN                    39 //SONG_INPUT_LEN/DEG_INPUT_DECOMPOSITION - SEQUENCE_LEN
-'define GLUE_LEN                            3 // must be less than SONG_INPUT_LEN/2
+'define GLUE_LEN                            3  // must be less than SONG_INPUT_LEN/2
 
 //Bit lengths
-'define NOTE_BIT_LEN                        8 //up to 256 notes
+'define BIT_LEN                             16 //bit len
+'define NOTE_BIT_LEN                        8  //up to 256 notes
 'define DELAY_BIT_LEN                       16 //up to 65,000 milli-seconds
-'define SEQ_CNT_BIT_LEN                     8 // ROUND_UP(LOG2(SONG_INPUT_LEN))
+'define SEQ_CNT_BIT_LEN                     8  // ROUND_UP(LOG2(SONG_INPUT_LEN))
+
+function integer log2;
+  input integer value;
+  begin
+    value = value-1;
+    for (log2=0; value>0; log2=log2+1)
+      value = value>>1;
+  end
+endfunction
